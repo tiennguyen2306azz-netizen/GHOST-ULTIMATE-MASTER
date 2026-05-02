@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Project Specific
+ghost_vault/
+ghost_media/
+build/
+dist/
+dist_portable/
+*.spec
+
+# IDEs
+.vscode/
+.idea/
+*.swp

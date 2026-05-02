@@ -1,0 +1,7 @@
+customtkinter
+openai
+requests
+Pillow
+duckduckgo-search
+pyttsx3
+python-dotenv
