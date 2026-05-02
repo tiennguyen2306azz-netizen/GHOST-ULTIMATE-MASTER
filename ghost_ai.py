@@ -209,6 +209,15 @@ class GhostAIReborn(ctk.CTk):
         )
         voice_cb.pack(side="left", padx=15)
 
+        # Master Mode toggle
+        self.master_var = ctk.BooleanVar(value=True) # Default to ON
+        master_cb = ctk.CTkCheckBox(
+            ctrl_panel, text="⚡ Master Mode",
+            variable=self.master_var,
+            font=FONT_SMALL, text_color=TEXT_DIM,
+            fg_color=CYAN, hover_color="#00ddeb",
+            checkmark_color="black", width=120
+        )
         master_cb.pack(side="left", padx=15)
 
         # Deep Analysis toggle
@@ -463,6 +472,18 @@ class GhostAIReborn(ctk.CTk):
 
         # Render markdown
         self._apply_markdown(tbox, text)
+
+        # Python Code Runner (AI only)
+        if role == "ai" and "```python" in text:
+            code_match = re.search(r"```python\n(.*?)\n```", text, re.DOTALL)
+            if code_match:
+                code = code_match.group(1)
+                ctk.CTkButton(
+                    card, text="▶ CHẠY CODE NÀY", 
+                    fg_color=GREEN, text_color="black", font=FONT_SMALL,
+                    height=28, width=140, corner_radius=8,
+                    command=lambda c=code: self._run_python_code(c)
+                ).grid(row=1, column=0, sticky="w", padx=16, pady=(0, 12))
 
         # Copy button (AI only)
         if role == "ai":
@@ -860,40 +881,17 @@ class GhostAIReborn(ctk.CTk):
 
         threading.Thread(target=run, daemon=True).start()
 
-    def _add_bubble(self, sender: str, text: str):
-        # Check if text contains python code block to add a 'Run' button
-        # This is a bit complex for a standard bubble, but we can detect it
-        # and show a button in the UI after the bubble is added.
-        bubble = self._create_bubble_widget(sender, text)
-        
-        # Simple detection for Python code blocks
-        if "```python" in text:
-            code_match = re.search(r"```python\n(.*?)\n```", text, re.DOTALL)
-            if code_match:
-                code = code_match.group(1)
-                run_btn = ctk.CTkButton(
-                    bubble, text="▶ CHẠY CODE NÀY", 
-                    fg_color=GREEN, text_color="black", font=FONT_SMALL,
-                    height=24, width=100,
-                    command=lambda c=code: self._run_python_code(c)
-                )
-                run_btn.pack(pady=5)
-        
-        return bubble
-
-    def _create_bubble_widget(self, sender: str, text: str):
+    def _greet(self):
         now = datetime.datetime.now().strftime("%H:%M  –  %d/%m/%Y")
         self._add_bubble(
             "ai",
-            f"Xin chào! Tôi là GPT-OSS-20B 🚀\n"
+            f"Xin chào! Tôi là GHOST-ULTIMATE-MASTER 🚀\n"
             f"Khởi động lúc {now}\n\n"
             f"📌 Model  : {MODEL_TEXT}\n"
-            f"☁️  Cloud  : API Platform\n"
-            f"⚡ Status : ONLINE\n\n"
-            f"Hãy đặt câu hỏi bất kỳ, tôi sẵn sàng phục vụ!"
+            f"☁️ Cloud  : GHOST-CORE Platform\n"
+            f"⚡ Status : ONLINE (Master Mode)\n\n"
+            f"Hãy đặt câu hỏi bất kỳ, tôi sẵn sàng phục vụ Master!"
         )
-        self._refresh_hist()
-
 
 if __name__ == "__main__":
     app = GhostAIReborn()
